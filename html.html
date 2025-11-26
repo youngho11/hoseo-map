@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>호서대학교 캠퍼스 지도</title>
+  <style>
+    /* 지도 꽉 채우기 */
+    #map { width: 100%; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- 카카오맵 JS API 불러오기 — 발급한 YOUR_APP_KEY 로 바꿔야 함 -->
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY"></script>
+  <script>
+    // 예시 건물 데이터 — name, 위도(lat), 경도(lng)
+    const buildings = [
+      { name: "본관",   lat: 36.785000, lng: 127.001000 },
+      { name: "종합정보관", lat: 36.786000, lng: 127.002000 },
+      { name: "학생회관",  lat: 36.784500, lng: 127.000500 }
+      // → 실제 건물 위도/경도는 아래 설명 따라 입력
+    ];
+
+    // 지도 초기화
+    window.onload = function() {
+      // 지도 중심을 대략 캠퍼스 위치로 — 예: 아산 캠퍼스 근방
+      const mapCenter = new kakao.maps.LatLng(36.7855, 127.0015); 
+
+      const map = new kakao.maps.Map(document.getElementById('map'), {
+        center: mapCenter,
+        level: 16  // 숫자 작을수록 확대
+      });
+
+      // 건물마다 마커 + 인포윈도우 표시
+      buildings.forEach(b => {
+        const marker = new kakao.maps.Marker({
+          map: map,
+          position: new kakao.maps.LatLng(b.lat, b.lng),
+          title: b.name
+        });
+
+        const info = new kakao.maps.InfoWindow({
+          content: `<div style="padding:5px;">${b.name}</div>`
+        });
+
+        marker.addListener('click', () => {
+          info.open(map, marker);
+        });
+      });
+    };
+  </script>
+</body>
+</html>
